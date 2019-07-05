@@ -64,7 +64,8 @@ public class SpikeClientManager: CGMManager {
         }
 
         // If our last glucose was less than 4.5 minutes ago, don't fetch.
-        if let latestGlucose = latestBackfill, latestGlucose.startDate.timeIntervalSinceNow > -TimeInterval(minutes: 4.5) {
+        //cyoung1024 : test with 4 minutes to account for Spike delay
+        if let latestGlucose = latestBackfill, latestGlucose.startDate.timeIntervalSinceNow > -TimeInterval(minutes: 4) {
             completion(.noData)
             return
         }
@@ -80,7 +81,8 @@ public class SpikeClientManager: CGMManager {
             }
 
             // Ignore glucose values that are up to a minute newer than our previous value, to account for possible time shifting in Share data
-            let startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)?.addingTimeInterval(TimeInterval(minutes: 1))
+            //cyoung1024 : test with 1.5 minutes to account for Spike delay
+            let startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)?.addingTimeInterval(TimeInterval(minutes: 1.5))
             let newGlucose = glucose.filterDateRange(startDate, nil).filter({ $0.isStateValid }).map {
                 return NewGlucoseSample(date: $0.startDate, quantity: $0.quantity, isDisplayOnly: false, syncIdentifier: "\(Int($0.startDate.timeIntervalSince1970))", device: self.device)
             }
