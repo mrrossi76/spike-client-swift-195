@@ -81,8 +81,7 @@ public class SpikeClientManager: CGMManager {
             }
 
             // Ignore glucose values that are up to a minute newer than our previous value, to account for possible time shifting in Share data
-            //cyoung1024 : test with 1.5 minutes to account for Spike delay
-            let startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)?.addingTimeInterval(TimeInterval(minutes: 1.5))
+            let startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)?.addingTimeInterval(TimeInterval(minutes: 1))
             let newGlucose = glucose.filterDateRange(startDate, nil).filter({ $0.isStateValid }).map {
                 return NewGlucoseSample(date: $0.startDate, quantity: $0.quantity, isDisplayOnly: false, syncIdentifier: "\(Int($0.startDate.timeIntervalSince1970))", device: self.device)
             }
